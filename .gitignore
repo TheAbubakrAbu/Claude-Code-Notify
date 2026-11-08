@@ -1,0 +1,8 @@
+# Personal: holds ntfy topics and Pushover keys.
+notify.json
+notify.log
+notify-debug.log
+__pycache__/
+*.pyc
+.DS_Store
+*.bak*

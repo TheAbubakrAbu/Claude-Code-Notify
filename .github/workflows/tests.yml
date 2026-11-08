@@ -1,0 +1,30 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Unit and hook tests (dry run, nothing is posted)
+        run: python3 -m unittest discover -s tests -v
+      - name: Installer wires and unwires a throwaway settings.json
+        run: |
+          bash install.sh --settings "$RUNNER_TEMP/settings.json" --dest "$RUNNER_TEMP/hooks"
+          python3 -c "import json,os; d=json.load(open(os.environ['RUNNER_TEMP']+'/settings.json')); assert set(d['hooks'])=={'Stop','StopFailure'}, d"
+          bash install.sh --settings "$RUNNER_TEMP/settings.json" --dest "$RUNNER_TEMP/hooks"
+          bash install.sh --settings "$RUNNER_TEMP/settings.json" --dest "$RUNNER_TEMP/hooks" --phone off
+          python3 -c "import json,os; d=json.load(open(os.environ['RUNNER_TEMP']+'/settings.json')); assert d['agentPushNotifEnabled'] is False and d['inputNeededNotifEnabled'] is False, d"
+          python3 -c "import json,os; d=json.load(open(os.environ['RUNNER_TEMP']+'/hooks/notify.json')); assert d['phone'] is False, d"
+          bash install.sh --settings "$RUNNER_TEMP/settings.json" --dest "$RUNNER_TEMP/hooks" --uninstall --purge
+          python3 -c "import json,os; d=json.load(open(os.environ['RUNNER_TEMP']+'/settings.json')); assert 'hooks' not in d, d"

@@ -1,0 +1,35 @@
+{
+  "_doc": "Copy of the defaults. Every key is optional; delete what you do not change. Keys starting with _ are comments.",
+  "title": "Claude Code",
+  "phone": true,
+  "_phone": "false keeps notifications off your phone: ntfy and Pushover are skipped. 'notify.py --phone off' sets this and also turns off Claude Code's own phone pushes.",
+  "sound": "Glass",
+  "_sound": "Any name in /System/Library/Sounds, or \"\" for a silent banner.",
+  "wait_minutes": 15,
+  "_wait_minutes": "How long a turn may wait on background work before the watcher posts 'still waiting on ...'.",
+  "resume_grace_seconds": 20,
+  "include_last_message": false,
+  "_include_last_message": "true appends the start of Claude's last message to the body, handy on a phone.",
+  "channels": {
+    "macos": true,
+    "linux": true,
+    "ntfy": {
+      "server": "https://ntfy.sh",
+      "topic": "",
+      "token": "",
+      "priority": "default",
+      "_doc": "Install the ntfy app, subscribe to a hard-to-guess topic, put it here. Free, no account."
+    },
+    "pushover": {
+      "token": "",
+      "user": "",
+      "sound": ""
+    },
+    "webhook": {
+      "url": "",
+      "_doc": "POSTs JSON {title, subtitle, message, event, text}. Slack incoming webhooks accept it as is."
+    },
+    "command": [],
+    "_command": "A command of your own, run as: command... TITLE SUBTITLE MESSAGE. Example: [\"say\"] reads every notification aloud."
+  }
+}
