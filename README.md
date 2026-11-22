@@ -15,7 +15,7 @@ Created by **Abubakr Elmallah** on **October 22, 2026**.
 | **6** delivery channels | macOS, Linux, ntfy, Pushover, a webhook, your own command |
 | **1** switch | phone notifications on or off, for every route at once |
 | **3** events | `Stop`, `StopFailure`, and optionally `Notification` |
-| **28** tests | run on macOS and Ubuntu on every push |
+| **43** tests | run on macOS and Ubuntu on every push |
 
 ---
 
@@ -325,12 +325,12 @@ The hook posts the "done" banner by itself. If you also want Claude to push to y
 ## Testing
 
 ```bash
-python3 -m unittest discover -s tests -v          # 28 tests, nothing is posted
+python3 -m unittest discover -s tests -v          # 43 tests, nothing is posted
 NOTIFY_DRY_RUN=1 python3 notify.py --test         # what a test notification would do
 NOTIFY_DRY_RUN=1 NOTIFY_WATCH_SECONDS=3 python3 notify.py < payload.json   # feed a payload by hand
 ```
 
-The tests run under `NOTIFY_DRY_RUN` against a throwaway `notify.json`, log, and `settings.json`, so they never post anything or touch your real settings. The [GitHub Actions workflow](.github/workflows/tests.yml) runs the suite on macOS and Ubuntu and exercises the installer, including `--phone off`, against a throwaway `settings.json`.
+The tests run under `NOTIFY_DRY_RUN` against a throwaway `notify.json`, log, and `settings.json`, so they never post anything or touch your real settings. They also run the installer against a throwaway `HOME` (fresh install, re-run, `--events`, `--phone off`, uninstall, and `--purge`), and a hygiene test keeps em dashes, home-folder paths, and signing identities out of the repository. The [GitHub Actions workflow](.github/workflows/tests.yml) runs the suite on macOS and Ubuntu and exercises the installer, including `--phone off`, against a throwaway `settings.json`.
 
 ## Uninstall
 
