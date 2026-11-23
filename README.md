@@ -325,12 +325,12 @@ The hook posts the "done" banner by itself. If you also want Claude to push to y
 ## Testing
 
 ```bash
-python3 -m unittest discover -s tests -v          # 43 tests, nothing is posted
+python3 -m unittest discover -s tests -v          # 61 tests, nothing is posted
 NOTIFY_DRY_RUN=1 python3 notify.py --test         # what a test notification would do
 NOTIFY_DRY_RUN=1 NOTIFY_WATCH_SECONDS=3 python3 notify.py < payload.json   # feed a payload by hand
 ```
 
-The tests run under `NOTIFY_DRY_RUN` against a throwaway `notify.json`, log, and `settings.json`, so they never post anything or touch your real settings. They also run the installer against a throwaway `HOME` (fresh install, re-run, `--events`, `--phone off`, uninstall, and `--purge`), and a hygiene test keeps em dashes, home-folder paths, and signing identities out of the repository. The [GitHub Actions workflow](.github/workflows/tests.yml) runs the suite on macOS and Ubuntu and exercises the installer, including `--phone off`, against a throwaway `settings.json`.
+The tests run under `NOTIFY_DRY_RUN` against a throwaway `notify.json`, log, and `settings.json`, so they never post anything or touch your real settings. The sending code that a dry run skips is tested too, still without posting: both desktop channels are off, the only real channel is a command that writes what it was handed to a file, and the banner and network calls are recorded instead of made. They also run the installer against a throwaway `HOME` (fresh install, re-run, `--events`, `--phone off`, uninstall, and `--purge`), and a hygiene test keeps em dashes, home-folder paths, and signing identities out of the repository. The [GitHub Actions workflow](.github/workflows/tests.yml) runs the suite on macOS and Ubuntu and exercises the installer, including `--phone off`, against a throwaway `settings.json`.
 
 ## Uninstall
 
